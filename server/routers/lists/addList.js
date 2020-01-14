@@ -7,9 +7,9 @@ module.exports = router =>
         '/',
         runHttpHandler(async req => {
             const { name, description } = req.body
-            const id = await db.insert({ name, description }).into(Tables.Lists)
+            const res = await db.insert({ name, description }).into(Tables.Lists)
             return {
-                id,
+                id: +res[0],
             }
         }),
     )

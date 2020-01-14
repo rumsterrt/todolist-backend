@@ -3,7 +3,7 @@ const { runHttpHandler } = require('../../utils/lifecicle')
 const { Tables } = require('../../constants')
 
 module.exports = router =>
-    router.patch(
+    router.put(
         '/:uuid',
         runHttpHandler(async req => {
             const { uuid } = req.params
@@ -12,7 +12,7 @@ module.exports = router =>
                 .where({ id: uuid })
                 .update({ name, description })
             return {
-                id,
+                id: +id,
             }
         }),
     )

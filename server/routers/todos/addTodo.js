@@ -3,13 +3,13 @@ const { runHttpHandler } = require('../../utils/lifecicle')
 const { Tables } = require('../../constants')
 
 module.exports = router =>
-    router.get(
-        '/id/:uuid',
+    router.post(
+        '/',
         runHttpHandler(async req => {
-            const { uuid } = req.params
-            const result = await db(Tables.Lists).where({ id: uuid })
+            const { name, categoryId } = req.body
+            const res = await db.insert({ name, list_id: categoryId }).into(Tables.Todos)
             return {
-                id: result[0],
+                id: +res[0],
             }
         }),
     )

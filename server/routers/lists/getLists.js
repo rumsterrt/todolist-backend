@@ -4,14 +4,24 @@ const { Tables } = require('../../constants')
 
 module.exports = router =>
     router.get(
-        '/nodes',
+        '/',
         runHttpHandler(async req => {
-            const { offset = 0, limit = 10, filter = {} } = req.query
+            const { offset = 0, limit = 10, id } = req.query
+
+            if (id) {
+                const result = await db(Tables.Lists).where({ id })
+
+                return {
+                    node: result[0],
+                }
+            }
+
             const nodes = await db
                 .select('*')
                 .from(Tables.Lists)
                 .limit(limit)
                 .offset(offset)
+
             return {
                 nodes,
             }

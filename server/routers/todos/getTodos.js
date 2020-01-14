@@ -1,0 +1,32 @@
+const db = require('../../services/db')
+const { runHttpHandler } = require('../../utils/lifecicle')
+const { Tables } = require('../../constants')
+
+module.exports = router =>
+    router.get(
+        '/',
+        runHttpHandler(async req => {
+            const { offset = 0, limit = 10, categoryId, id } = req.query
+
+            if (id) {
+                const result = await db(Tables.Todos).where({ id })
+
+                return {
+                    node: result[0],
+                }
+            }
+
+            const nodes = (
+                await db
+                    .select('*')
+                    .where({ list_id: categoryId })
+                    .from(Tables.Todos)
+                    .limit(limit)
+                    .offset(offset)
+            ).map(node => ({ ...node, is_done: !!node.is_done }))
+
+            return {
+                nodes,
+            }
+        }),
+    )
