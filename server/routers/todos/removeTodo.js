@@ -8,7 +8,7 @@ module.exports = router =>
         runHttpHandler(async req => {
             const { id } = req.params
 
-            await db(Tables.Lists)
+            await db(Tables.Todos)
                 .where({ id })
                 .del()
 

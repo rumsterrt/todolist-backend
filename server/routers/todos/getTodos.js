@@ -19,11 +19,11 @@ module.exports = router =>
             const nodes = (
                 await db
                     .select('*')
-                    .where({ list_id: categoryId })
+                    .where({ categoryId: categoryId })
                     .from(Tables.Todos)
                     .limit(limit)
                     .offset(offset)
-            ).map(node => ({ ...node, is_done: !!node.is_done }))
+            ).map(node => ({ ...node, isDone: !!node.isDone }))
 
             return {
                 nodes,

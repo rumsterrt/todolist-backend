@@ -5,19 +5,19 @@ exports.up = function(knex) {
             .unsigned()
             .primary()
         table
-            .integer('list_id')
+            .integer('categoryId')
             .unsigned()
             .notNullable()
             .index()
         table.string('description').notNullable()
         table
-            .bool('is_done')
+            .bool('isDone')
             .notNullable()
             .defaultTo(false)
         table.timestamps(true, true)
 
         table
-            .foreign('list_id')
+            .foreign('categoryId')
             .references('id')
             .inTable('lists')
             .onDelete('cascade')
