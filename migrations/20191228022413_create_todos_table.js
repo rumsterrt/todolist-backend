@@ -9,7 +9,7 @@ exports.up = function(knex) {
             .unsigned()
             .notNullable()
             .index()
-        table.string('description').notNullable()
+        table.string('name').notNullable()
         table
             .bool('isDone')
             .notNullable()
