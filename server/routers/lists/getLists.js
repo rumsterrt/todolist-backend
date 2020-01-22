@@ -8,7 +8,7 @@ module.exports = router =>
         '/',
         auth,
         runHttpHandler(async req => {
-            const { offset = 0, limit = 10, id } = req.query
+            const { offset = 0, limit = 10, id, filter } = req.query
             const { userId } = req.user
 
             if (id) {
@@ -52,7 +52,7 @@ module.exports = router =>
                 }
             }
 
-            const nodes = await db
+            const request = db
                 .select(
                     't1.id as id',
                     't1.name as name',
@@ -90,6 +90,12 @@ module.exports = router =>
                     't1.id',
                     't2.id',
                 )
+
+            if (filter) {
+                request.where('name', 'like', `%${filter}%`)
+            }
+
+            const nodes = await request
 
             return {
                 nodes: nodes.map(node => ({ ...node, completeTodos: node.completeTodos || 0 })),
