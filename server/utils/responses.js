@@ -1,4 +1,8 @@
-const success = (res, payload = {}) => res.status(200).send({ success: true, ...payload })
-const failure = (res, error, message) => res.status(200).send({ success: false, error, message })
+const success = (res, { status = 200, ...payload } = {}) => res.status(status).send({ success: true, ...payload })
+const failure = (res, error, message, status = 200) =>
+    res.status(status).send({
+        success: false,
+        error: { name: (error && error.name) || 'Internal error', message: message || (error && error.message) },
+    })
 
 module.exports = { success, failure }

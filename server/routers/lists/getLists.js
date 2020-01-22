@@ -1,12 +1,15 @@
 const db = require('../../services/db')
 const { runHttpHandler } = require('../../utils/lifecicle')
 const { Tables } = require('../../constants')
+const auth = require('../../middleware/auth')
 
 module.exports = router =>
     router.get(
         '/',
+        auth,
         runHttpHandler(async req => {
             const { offset = 0, limit = 10, id } = req.query
+            const { userId } = req.user
 
             if (id) {
                 const result = await db
@@ -27,7 +30,7 @@ module.exports = router =>
                             .from(Tables.Lists)
                             .leftJoin(Tables.Todos, `${Tables.Lists}.id`, `${Tables.Todos}.categoryId`)
                             .groupBy(`${Tables.Lists}.id`)
-                            .where({ [`${Tables.Lists}.id`]: id })
+                            .where({ [`${Tables.Lists}.id`]: id, ownerId: userId })
                             .count(`${Tables.Todos}.id as totalTodos`)
                             .as('t1'),
                     )
@@ -38,7 +41,7 @@ module.exports = router =>
                             .leftJoin(Tables.Todos, `${Tables.Lists}.id`, `${Tables.Todos}.categoryId`)
                             .groupBy(`${Tables.Lists}.id`)
                             .count(`${Tables.Todos}.id as completeTodos`)
-                            .where({ [`${Tables.Todos}.isDone`]: 1, [`${Tables.Lists}.id`]: id })
+                            .where({ [`${Tables.Todos}.isDone`]: 1, [`${Tables.Lists}.id`]: id, ownerId: userId })
                             .as('t2'),
                         't1.id',
                         't2.id',
@@ -69,6 +72,7 @@ module.exports = router =>
                         .offset(offset)
                         .leftJoin(Tables.Todos, `${Tables.Lists}.id`, `${Tables.Todos}.categoryId`)
                         .groupBy(`${Tables.Lists}.id`)
+                        .where({ ownerId: userId })
                         .count(`${Tables.Todos}.id as totalTodos`)
                         .as('t1'),
                 )
@@ -81,7 +85,7 @@ module.exports = router =>
                         .leftJoin(Tables.Todos, `${Tables.Lists}.id`, `${Tables.Todos}.categoryId`)
                         .groupBy(`${Tables.Lists}.id`)
                         .count(`${Tables.Todos}.id as completeTodos`)
-                        .where({ [`${Tables.Todos}.isDone`]: 1 })
+                        .where({ [`${Tables.Todos}.isDone`]: 1, ownerId: userId })
                         .as('t2'),
                     't1.id',
                     't2.id',

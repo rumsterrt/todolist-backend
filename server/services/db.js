@@ -1,13 +1,14 @@
 const Knex = require('knex')
+const config = require('config')
 
 const knex = Knex({
     client: 'mysql',
     connection: {
-        host: process.env.DATABASE_HOST,
-        port: process.env.DATABASE_PORT,
-        user: process.env.DATABASE_USER,
-        password: process.env.DATABASE_ACCESS_KEY,
-        database: process.env.DATABASE_NAME,
+        host: config.get('db.host'),
+        port: config.get('db.port'),
+        database: config.get('db.name'),
+        user: config.get('db.user'),
+        password: config.get('db.password'),
     },
 })
 

@@ -1,0 +1,13 @@
+{
+    "port": 4000,
+    "db": {
+        "port": 3306,
+        "host": "localhost",
+        "name": "todo_db",
+        "user": "root",
+        "password": "GodLike3133"
+    },
+    "client_url": "http://localhost:3000",
+    "jwt_secret": "secret jwt",
+    "jwt_lifetime": "5h"
+}
